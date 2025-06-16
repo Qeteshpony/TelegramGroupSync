@@ -13,6 +13,7 @@ BOT_TOKEN = os.getenv('BOT_TOKEN')
 MAIN_GROUP_ID = int(os.getenv('MAIN_GROUP_ID'))
 SECONDARY_GROUP_ID = int(os.getenv('SECONDARY_GROUP_ID'))
 LOG_LEVEL = os.getenv('LOG_LEVEL')
+DECLINE_MESSAGE = os.getenv('DECLINE_MESSAGE')
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=LOG_LEVEL
@@ -58,11 +59,11 @@ async def join_request_handler(update: Update, context: ContextTypes.DEFAULT_TYP
             await join_request.approve()
             logger.info(f"{user.full_name} ({user.username}) was approved")
         else:
-            await context.bot.send_message(chat_id=user_chat_id, text="You are not allowed to join this group.")
+            await context.bot.send_message(chat_id=user_chat_id, text=DECLINE_MESSAGE)
             await join_request.decline()
             logger.info(f"{user.full_name} ({user.username}) was declined")
     except BadRequest as e:
-        await context.bot.send_message(chat_id=user_chat_id, text="You are not allowed to join this group.")
+        await context.bot.send_message(chat_id=user_chat_id, text=DECLINE_MESSAGE)
         await join_request.decline()
         logger.info(f"{user.full_name} ({user.username}) was declined because of Error: {e}")
 
